@@ -3,17 +3,46 @@
 [![CI](https://github.com/Lifezy/PSMetaC/actions/workflows/ci.yml/badge.svg)](https://github.com/Lifezy/PSMetaC/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-面向 Windows 的 Photoshop PSD / PSB 元数据检查与清理工具，重点清理 XMP 中冗余的
-`DocumentAncestors` 编辑溯源记录。支持嵌套智能对象、批量队列、自动处理文件夹、
-单文件报告和 MCP 接口。
+清理 Photoshop PSD / PSB 中冗余的 XMP 编辑溯源信息，支持嵌套智能对象、批量任务和处理报告。
 
-A Windows desktop tool for inspecting and cleaning redundant Photoshop PSD/PSB XMP metadata,
-including DocumentAncestors in embedded smart objects. Local processing, auditable reports,
-batch queues, and an MCP stdio interface.
+A Windows tool for cleaning redundant Photoshop metadata, with smart-object support, batch queues and auditable reports.
 
-**当前源码版本：`0.2.0-alpha.6`。** 本项目仍处于 alpha 阶段。Windows 和已安装的
-Adobe Photoshop 是实际清理流程的前提；仓库不包含 Photoshop、用户工程文件、
-运行数据库或研发机器上的任务报告。
+**`0.2.0-alpha.6` · Windows 10/11 · 需要已安装 Photoshop · Alpha 测试阶段**
+
+![选择文件与处理方案](docs/images/create-task.png)
+
+先检查再决定，或按规则批量处理。默认生成安全副本，也可以明确选择直接保存并备份。
+
+<details open>
+<summary><strong>批量进度与检查结果</strong>：查看对象处理进度，检查后选择开始处理或仅保留结果</summary>
+
+![批量任务进度与检查后确认](docs/images/batch-queue.png)
+
+</details>
+
+<details>
+<summary><strong>处理方案与图层整理</strong>：选择验收标准，可选删除隐藏图层和空图层</summary>
+
+![处理方案与图层整理](docs/images/cleanup-options.png)
+
+</details>
+
+<details>
+<summary><strong>自动处理文件夹</strong>：扫描、等待文件稳定，再按固定规则创建任务</summary>
+
+![自动处理文件夹](docs/images/automatic-folders.png)
+
+</details>
+
+<details>
+<summary><strong>历史统计</strong>：分清实际释放空间、结果缩小与新增副本占用</summary>
+
+![历史统计与磁盘变化](docs/images/history-statistics.png)
+
+</details>
+
+以上截图由当前桌面界面渲染，使用独立的演示数据。文件名、进度、耗时和统计数字均为展示示例，
+不代表实测清理效果。截图可通过 `scripts/capture-readme.mjs` 重新生成。
 
 ## 功能
 
@@ -87,7 +116,7 @@ pnpm run smoke:mcp
 ## 验证与已知边界
 
 - 自动测试使用临时目录，不启动 Photoshop；验证状态机、路径授权、账本、策略、报告、恢复与空间规划。
-- 本轮开源整理需要从干净导出目录重新执行测试和打包检查；历史本地截图不作为当前 CI 通过证据。
+- 开源快照已通过 82 项自动测试、GitHub Windows CI、NSIS 构建和打包 MCP 冒烟测试。
 - 实际 Photoshop 工作流需要隔离样本实机验证，尤其是智能滤镜慢开、深层嵌套、大文件保存和取消。
 - 保存期间取消属于合作请求，不能覆盖 Photoshop 正在执行的保存指令。
 - 安全副本保留源文件；直存模式会覆盖源文件，未备份时无法由本工具回滚。

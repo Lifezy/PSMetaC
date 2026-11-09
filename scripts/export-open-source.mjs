@@ -50,5 +50,8 @@ await fs.mkdir(targetRoot, { recursive: true });
 for (const name of rootFiles) await copy(name);
 for (const name of ["src", "tests", "scripts", "fixtures", "vendor", ".github"]) await copy(name);
 for (const name of publicDocs) await copy(path.join("docs", name));
+if (await fs.stat(path.join(sourceRoot, "docs", "images")).catch(() => null)) {
+  await copy(path.join("docs", "images"));
+}
 for (const name of buildFiles) await copy(path.join("build", name));
 process.stdout.write(`${JSON.stringify({ targetRoot, fileCount: copied.length, files: copied }, null, 2)}\n`);
