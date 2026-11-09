@@ -1,0 +1,28 @@
+name: 故障报告 / Bug report
+description: 提供可复现的问题，勿上传生产文件或原始诊断包。
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境与版本
+      description: PSMetaC、Windows、Photoshop 版本；PSD/PSB、保存模式。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 优先给出合成样本步骤，移除真实路径、文件名、客户信息。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 脱敏后的错误代码或截图
+      description: 不要粘贴凭据、完整日志或未经检查的诊断 ZIP。

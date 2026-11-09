@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-tests:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run verify:public
+      - run: pnpm test
+      - run: pnpm run verify:package
+
+  windows-package:
+    if: github.event_name == 'workflow_dispatch'
+    needs: windows-tests
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run pack:win
+      - run: pnpm run verify:dist -- --require-installer
+      - run: pnpm run smoke:mcp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: psmetac-windows-alpha
+          path: |
+            dist/PSMetaC_Setup_*.exe
+            dist/PSMetaC_Setup_*.exe.blockmap
+            dist/build-verification.json
+          retention-days: 14

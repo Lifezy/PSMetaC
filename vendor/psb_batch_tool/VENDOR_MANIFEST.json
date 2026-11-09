@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "snapshotPurpose": "Validated V-L59-compatible Photoshop execution assets",
+  "sourceDirectoryAtSnapshot": "vendor/psb_batch_tool",
+  "files": [
+    {
+      "name": "psb_recursive_inspect.mjs",
+      "bytes": 24311,
+      "sha256": "0a43667dab83e6080a0eda5d29aebdd5e2355643017becf79660d73dc09fa1e8"
+    },
+    {
+      "name": "psb_metadata_cleanup.jsx",
+      "bytes": 85782,
+      "sha256": "b47b0e923e37fc240efc7971c1309332eed77a0254d5ed2a525044b1952310ef"
+    },
+    {
+      "name": "pixel_compare.mjs",
+      "bytes": 9265,
+      "sha256": "3c2afae42a2cf379f7d6f91d731c00a94b00d4851992405258a3a6677bfa5604"
+    },
+    {
+      "name": "run_photoshop_jsx.vbs",
+      "bytes": 2533,
+      "sha256": "af5efec711c4c0544c50e61113c69d18281b003b4f33faca98278c4646dfba56"
+    }
+  ]
+}

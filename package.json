@@ -1,0 +1,114 @@
+{
+  "name": "psmetac-desktop",
+  "version": "0.2.0-alpha.6",
+  "private": true,
+  "author": "PaceSpace",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lifezy/PSMetaC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lifezy/PSMetaC/issues"
+  },
+  "homepage": "https://github.com/Lifezy/PSMetaC#readme",
+  "packageManager": "pnpm@11.25.0",
+  "type": "module",
+  "description": "PaceSpace Metadata Cleaner (PSMetaC) safely inspects and cleans redundant Photoshop PSD/PSB metadata.",
+  "main": "src/desktop/main.ts",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.ts",
+    "serve": "node src/cli.ts serve",
+    "mcp": "node src/mcp.ts",
+    "diagnose": "node src/cli.ts diagnose",
+    "verify:package": "node scripts/verify-package.mjs",
+    "verify:public": "node scripts/check-public-tree.mjs",
+    "verify:dist": "node scripts/verify-dist.mjs",
+    "smoke:mcp": "node scripts/smoke-installed-mcp.mjs",
+    "desktop": "electron .",
+    "prepare:runtime": "node scripts/prepare-runtime.mjs",
+    "pack:dir": "node scripts/build-win.mjs --dir",
+    "pack:win": "node scripts/build-win.mjs --nsis"
+  },
+  "devDependencies": {
+    "@electron/asar": "3.4.1",
+    "electron": "43.2.0",
+    "electron-builder": "26.11.1",
+    "resedit": "1.7.0"
+  },
+  "build": {
+    "appId": "local.psb.metadata.cleaner",
+    "productName": "PaceSpace Metadata Cleaner",
+    "electronVersion": "43.2.0",
+    "asar": true,
+    "beforeBuild": "scripts/before-build.mjs",
+    "directories": {
+      "app": ".runtime-app",
+      "output": "dist"
+    },
+    "afterPack": "scripts/after-pack.mjs",
+    "files": [
+      "src/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "LICENSE",
+        "to": "LICENSE.psmetac.txt"
+      },
+      {
+        "from": "THIRD_PARTY_NOTICES.md",
+        "to": "THIRD_PARTY_NOTICES.md"
+      },
+      {
+        "from": "vendor/psb_batch_tool",
+        "to": "psb_batch_tool",
+        "filter": [
+          "VENDOR_MANIFEST.json",
+          "psb_recursive_inspect.mjs",
+          "psb_metadata_cleanup.jsx",
+          "pixel_compare.mjs",
+          "run_photoshop_jsx.vbs"
+        ]
+      },
+      {
+        "from": "scripts",
+        "to": "scripts",
+        "filter": [
+          "photoshop_idle_probe.vbs",
+          "photoshop_bridge_probe.vbs",
+          "psmetac-mcp.cmd"
+        ]
+      },
+      {
+        "from": "src",
+        "to": "mcp-runtime/src"
+      },
+      {
+        "from": "package.json",
+        "to": "mcp-runtime/package.json"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "executableName": "psmetac",
+      "icon": "build/psmetac.ico",
+      "artifactName": "PSMetaC_Setup_v${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "build/psmetac.ico",
+      "uninstallerIcon": "build/psmetac.ico",
+      "installerSidebar": "build/installerSidebar.bmp",
+      "uninstallerSidebar": "build/installerSidebar.bmp",
+      "include": "build/installer-alpha4.nsh",
+      "uninstallDisplayName": "PaceSpace Metadata Cleaner ${version}"
+    }
+  }
+}

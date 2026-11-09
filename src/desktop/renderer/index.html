@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PaceSpace Metadata Cleaner (PSMetaC)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ui-foundation.css">
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11.5 12 5l8 6.5v7a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M9 20v-6h6v6"/></symbol>
+    <symbol id="i-add" viewBox="0 0 24 24"><path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M12 11v6M9 14h6"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7h7l2 2h9v10H3z"/><path d="M3 7V5h7l2 2"/></symbol>
+    <symbol id="i-report" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h4M9 12h7M9 16h7"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2z"/><path d="M12 9v5M12 18h.01"/></symbol>
+    <symbol id="i-health" viewBox="0 0 24 24"><path d="M3 12h4l2.3-5 4.2 10 2.2-5H21"/><path d="M5 4h14v16H5z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h7M15 6h5M4 12h3M11 12h9M4 18h10M18 18h2"/><circle cx="13" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="16" cy="18" r="2"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 3.4 2.2c-.8.4-1.2.9-1.2 1.8M12 17h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-cancel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
+    <symbol id="i-open" viewBox="0 0 24 24"><path d="M4 5h6l2 2h8v12H4z"/><path d="m11 11 3-3 3 3M14 8v7"/></symbol>
+    <symbol id="i-remove" viewBox="0 0 24 24"><path d="M5 6h14M9 6V4h6v2M7 6l1 14h8l1-14M10 10v6M14 10v6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/></symbol>
+    <symbol id="i-review" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5M7.5 10.5h6M10.5 7.5v6"/></symbol>
+    <symbol id="i-sidebar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M14 9l3 3-3 3"/></symbol>
+    <symbol id="i-chevron-up" viewBox="0 0 24 24"><path d="m7 14 5-5 5 5"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
+    <symbol id="i-screen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5z"/></symbol>
+    <symbol id="i-files" viewBox="0 0 24 24"><path d="M8 3h8l4 4v12H8z"/><path d="M16 3v5h4M4 7v14h12"/></symbol>
+    <symbol id="i-scan-eye" viewBox="0 0 24 24"><path d="M3 12s3.5-5 9-5 9 5 9 5-3.5 5-9 5-9-5-9-5z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+    <symbol id="i-storage" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 16h4"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/><path d="M7.5 15h9"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+    <symbol id="i-minimize" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+    <symbol id="i-maximize" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1.5"/></symbol>
+    <symbol id="i-restore" viewBox="0 0 24 24"><path d="M8 8V5h11v11h-3M5 8h11v11H5z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17"/></symbol>
+  </svg>
+
+  <div id="onboarding" class="overlay hidden">
+    <form id="onboarding-form" class="wizard">
+      <div class="wizard-brand">
+        <img src="assets/psmetac-logo.svg" alt="" width="46" height="46">
+        <div><strong>PSMetaC</strong><span>首次设置</span></div>
+      </div>
+      <p class="eyebrow">开始前的安全设置</p>
+      <h1>选择软件自己的工作位置</h1>
+      <p class="lead">这里保存任务、日志、报告和有问题的副本。你手动选择的文件只授权本次任务；“允许目录”主要供自动监控和 MCP 使用。</p>
+      <label>软件数据目录 <button class="info-dot" type="button" data-tip="保存程序数据库、日志、报告、工作副本和隔离结果。不要选择空间紧张的磁盘。">!</button>
+        <div class="pick"><input id="data-root" readonly required><button type="button" data-pick="data-root">选择</button></div>
+      </label>
+      <label>允许自动读取的目录（可选）
+        <span class="field-help">只有自动监控和 MCP 需要；手动选文件不受这里限制。</span>
+        <div class="pick"><input id="input-root" readonly><button type="button" data-pick="input-root">选择</button></div>
+      </label>
+      <label>允许自动保存的目录（可选）
+        <span class="field-help">自动任务只能把结果保存到这里；手动任务可另选位置。</span>
+        <div class="pick"><input id="output-root" readonly><button type="button" data-pick="output-root">选择</button></div>
+      </label>
+      <label>任务专用 Photoshop <button class="info-dot" type="button" data-tip="先点击下方“检查 Photoshop 和磁盘”。如果电脑有多个版本，请选择专门交给 PSMetaC 使用的版本；程序会核对实际 COM/JSX 连接版本。">!</button>
+        <select id="bootstrap-photoshop" disabled><option value="">检查后选择</option></select>
+      </label>
+      <label>Photoshop 连接方式 <button class="info-dot" type="button" data-tip="不确定时保持“自动选择”。程序会优先测试版本专用接口，再测试通用接口，只有实际版本和安装路径都一致才会通过。">!</button>
+        <select id="bootstrap-connection-mode"><option value="auto">自动选择（推荐）</option><option value="specified">指定连接接口</option></select>
+      </label>
+      <label id="bootstrap-progid-field" class="hidden">连接接口 <button class="info-dot" type="button" data-tip="可以从检测列表选择，也可以手工输入 Photoshop.Application 开头的接口，例如 Photoshop.Application.190。它必须先通过无文件 JSX 测试。">!</button>
+        <input id="bootstrap-progid" list="bootstrap-progid-options" placeholder="例如 Photoshop.Application.190"><datalist id="bootstrap-progid-options"></datalist>
+      </label>
+      <div class="wizard-actions">
+        <button id="inspect-bootstrap" type="button">检查 Photoshop 和磁盘</button>
+        <button class="primary" type="submit">保存并启动</button>
+      </div>
+      <div id="bootstrap-diagnostics" class="diagnosis empty-diagnosis">
+        选择数据目录后，点击“检查 Photoshop 和磁盘”。
+      </div>
+      <details id="bootstrap-technical-wrap" class="technical hidden">
+        <summary>查看技术详情</summary>
+        <pre id="bootstrap-technical"></pre>
+      </details>
+      <p id="onboarding-error" class="message error"></p>
+    </form>
+  </div>
+
+  <header class="window-titlebar">
+    <div class="window-brand">
+      <img src="assets/psmetac-logo.svg" alt="" width="24" height="24">
+      <strong>PSMetaC</strong>
+      <span>PaceSpace Metadata Cleaner</span>
+    </div>
+    <div class="window-titlebar-actions">
+      <div class="theme-switch" role="group" aria-label="界面主题">
+        <button type="button" data-theme-choice="system" title="跟随系统" aria-label="跟随系统"><svg><use href="#i-screen"/></svg></button>
+        <button type="button" data-theme-choice="light" title="亮色主题" aria-label="亮色主题"><svg><use href="#i-sun"/></svg></button>
+        <button type="button" data-theme-choice="dark" title="暗色主题" aria-label="暗色主题"><svg><use href="#i-moon"/></svg></button>
+      </div>
+      <div class="window-controls" role="group" aria-label="窗口控制">
+        <button type="button" data-window-action="minimize" title="最小化" aria-label="最小化"><svg><use href="#i-minimize"/></svg></button>
+        <button id="window-maximize" type="button" data-window-action="toggle-maximize" title="最大化" aria-label="最大化"><svg><use href="#i-maximize"/></svg></button>
+        <button class="window-close" type="button" data-window-action="close" title="关闭到系统托盘" aria-label="关闭到系统托盘"><svg><use href="#i-close"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <button id="sidebar-toggle" class="sidebar-toggle" type="button" aria-label="收起导航" title="收起导航"><svg><use href="#i-sidebar"/></svg></button>
+      </div>
+
+      <nav class="side-nav" aria-label="主导航">
+        <p class="nav-group-title">常用</p>
+        <button class="nav active" data-view="dashboard" data-title="概览"><svg><use href="#i-home"/></svg><span>概览</span></button>
+        <button class="nav" data-view="new-task" data-title="处理文件"><svg><use href="#i-add"/></svg><span>处理文件</span></button>
+        <button class="nav" data-view="jobs" data-title="任务记录"><svg><use href="#i-list"/></svg><span>任务记录</span></button>
+
+        <p class="nav-group-title">自动处理</p>
+        <button class="nav" data-view="watchers" data-title="自动处理文件夹"><svg><use href="#i-folder"/></svg><span>自动处理文件夹</span></button>
+
+        <p class="nav-group-title">处理结果</p>
+        <button class="nav" data-view="reports" data-title="处理报告"><svg><use href="#i-report"/></svg><span>处理报告</span></button>
+        <button class="nav" data-view="quarantine" data-title="人工复核"><svg><use href="#i-review"/></svg><span>人工复核</span><b id="quarantine-nav-count" class="nav-count hidden">0</b></button>
+
+        <p class="nav-group-title">工具</p>
+        <button class="nav" data-view="diagnostics" data-title="检查运行环境"><svg><use href="#i-health"/></svg><span>检查运行环境</span></button>
+        <button class="nav" data-view="settings" data-title="设置"><svg><use href="#i-settings"/></svg><span>设置</span></button>
+        <button class="nav" data-view="help" data-title="认识与使用 PSMetaC"><svg><use href="#i-help"/></svg><span>认识与使用</span></button>
+        <button class="nav" data-view="about" data-title="关于 PSMetaC"><svg><use href="#i-info"/></svg><span>关于 PSMetaC</span></button>
+      </nav>
+
+      <section class="queue-card" aria-live="polite">
+        <div class="queue-card-title"><i id="queue-dot"></i><span id="queue-pill">正在连接…</span></div>
+        <p id="queue-current">等待读取任务状态</p>
+        <button id="sidebar-queue-toggle" type="button">暂停处理新任务</button>
+        <button id="sidebar-queue-stop" class="queue-stop" type="button">完成当前项后终止</button>
+      </section>
+    </aside>
+
+    <div class="content-shell">
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">PaceSpace Metadata Cleaner</p>
+          <h1 id="view-title">概览</h1>
+          <p id="view-subtitle" class="view-subtitle">查看当前任务和需要你留意的结果。</p>
+        </div>
+        <div class="topbar-actions">
+          <div id="queue-topbar-actions" class="view-topbar-actions">
+            <button id="queue-toggle" class="quiet-action">暂停处理新任务</button>
+            <button id="queue-stop" class="danger-quiet">完成当前项后终止</button>
+          </div>
+          <div class="view-topbar-actions hidden" data-view-actions="settings">
+            <button id="import-settings" type="button">导入设置</button>
+            <button id="export-settings" type="button">导出设置</button>
+            <button class="primary" type="submit" form="settings-form">保存设置</button>
+          </div>
+          <div class="view-topbar-actions hidden" data-view-actions="diagnostics">
+            <button id="export-diagnostic-logs" type="button">导出诊断日志</button>
+            <button id="run-diagnostics" class="primary" type="button">开始检测</button>
+          </div>
+          <div class="view-topbar-actions hidden" data-view-actions="about">
+            <button id="copy-version-info" type="button">复制版本信息</button>
+            <button id="show-release-details" class="primary" type="button">查看更新明细</button>
+          </div>
+        </div>
+      </header>
+
+      <div id="view-scroll" class="view-scroll">
+        <section id="view-dashboard" class="view active">
+          <article id="dashboard-attention-panel" class="panel dashboard-section dashboard-attention">
+            <div class="panel-head"><div><span class="section-kicker">需要你处理</span><h2 id="dashboard-attention-title">当前没有需要处理的事项</h2><p id="dashboard-attention-copy">发生安全阻止、处理失败或需要人工复核时，会优先显示在这里。</p></div><button id="dashboard-attention-action" data-go="quarantine" class="hidden">查看并处理</button></div>
+            <div id="dashboard-attention-jobs"></div>
+          </article>
+          <article id="dashboard-running-panel" class="panel dashboard-section hidden">
+            <div class="panel-head"><div><span class="section-kicker">正在运行</span><h2>当前任务</h2><p>这里显示正在做什么、已经用了多久，以及接下来会进行哪一步。</p></div><button data-go="jobs">查看任务记录</button></div>
+            <div id="dashboard-running-jobs"></div>
+          </article>
+          <div class="intro-strip">
+            <div><span class="strip-kicker">处理新的 Photoshop 文件</span><strong>默认生成安全副本，不让 Photoshop 打开原件</strong><p>先选择文件和常用方案；需要时再展开详细设置。</p></div>
+            <button data-go="new-task" class="primary">处理文件</button>
+          </div>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">最近完成</span><h2>最近任务</h2><p>每个文件都是一项独立任务；报告和人工决定都归属于对应文件。</p></div><button data-go="jobs">查看全部</button></div>
+            <div id="recent-jobs"></div>
+          </article>
+          <section class="dashboard-stats" aria-label="处理统计">
+            <div class="dashboard-stats-head history-head"><div><span class="section-kicker">历史统计</span><h2>处理成果与磁盘变化</h2><p>“结果变小”不等于“磁盘真正腾出”；安全副本和备份会增加占用。</p></div><div class="history-filters"><label>时间<select id="history-period"><option value="30">最近 30 天</option><option value="90">最近 90 天</option><option value="365">最近一年</option><option value="all">全部记录</option></select></label><label>格式<select id="history-format"><option value="all">PSD + PSB</option><option value="psb">仅 PSB</option><option value="psd">仅 PSD</option></select></label><label>方式<select id="history-mode"><option value="all">全部方式</option><option value="safe_copy">安全副本</option><option value="in_place">直接保存</option></select></label></div></div>
+            <div class="history-ledger">
+              <article class="history-primary"><span>磁盘真正腾出</span><strong id="history-actual-freed">0 B</strong><small id="history-actual-freed-note">只计直存净减少，并扣除仍存在的备份</small></article>
+              <article><span>处理结果合计缩小</span><strong id="history-output-reduction">0 B</strong><small>包含安全副本；不代表磁盘净释放</small></article>
+              <article><span>当前新增占用</span><strong id="history-added-bytes">0 B</strong><small id="history-added-detail">安全副本、隔离结果与恢复备份</small></article>
+              <article><span>独立源文件</span><strong id="history-unique-sources">0</strong><small id="history-task-detail">0 项任务</small></article>
+            </div>
+            <div class="metrics">
+              <article><span>等待处理</span><strong id="count-waiting">0</strong><small>排队或等待批准</small></article>
+              <article><span>已通过</span><strong id="count-success">0</strong><small>全部安全检查通过</small></article>
+              <article><span>需要复核</span><strong id="count-quarantine">0</strong><small>结果已单独保存</small></article>
+              <article><span>未能处理</span><strong id="count-failed">0</strong><small>失败或被安全规则阻止</small></article>
+            </div>
+            <div class="history-breakdown"><span id="history-outcome-summary">尚无执行结果</span><span id="history-layer-summary">未使用图层整理</span></div>
+          </section>
+        </section>
+
+        <section id="view-new-task" class="view">
+          <form id="task-form" class="panel form-grid">
+            <div class="full section-intro"><span class="step-mark">1</span><div><h2>选择要处理的文件</h2><p>可以选择文件，也可以拖入 PSD、PSB 或文件夹。文件夹会递归查找其中的 PSD/PSB；每个找到的文件都只获得本次任务的精确授权。</p></div></div>
+            <div id="file-drop-zone" class="full file-drop-zone" tabindex="0" aria-label="拖放或选择 PSD、PSB 文件">
+              <div class="file-drop-head">
+                <div><strong>把文件或文件夹拖到这里</strong><span>文件夹会扫描所有子文件夹，只添加 PSD 和 PSB，不会直接开始处理。</span></div>
+                <button id="pick-files" type="button">选择 PSD / PSB 文件</button>
+              </div>
+              <div id="pending-file-toolbar" class="pending-file-toolbar hidden">
+                <label class="pending-select-all"><input id="select-all-pending-files" type="checkbox" checked> <span id="pending-selection-label">已选择 0 项</span></label>
+                <div>
+                  <button id="clear-pending-selection" class="quiet-action" type="button">全部暂不处理</button>
+                  <button id="remove-selected-files" class="danger-quiet" type="button">移除所选</button>
+                </div>
+              </div>
+              <div id="selected-files" class="file-list empty">尚未选择文件</div>
+              <p id="drop-scan-summary" class="drop-scan-summary">勾选的文件会创建任务；取消勾选会保留在清单中，但本次暂不处理。</p>
+            </div>
+            <section class="task-profile-summary full" aria-label="当前处理方案">
+              <div class="task-profile-copy"><span class="section-kicker">处理方案</span><strong id="task-profile-name">安全标准</strong><p id="task-profile-summary">生成安全副本 · 标准清理 · 符合条件后自动处理 · 严格像素验收</p></div>
+              <label class="task-preset-field">常用方案<select id="task-preset"><option value="safe-standard">安全标准（推荐）</option><option value="inspect-first">先检查再决定</option><option value="direct-backup">直接保存并备份</option><option value="custom">自定义</option></select></label>
+              <button id="open-task-options" type="button"><svg><use href="#i-settings"/></svg>修改方案</button>
+            </section>
+            <div id="task-options-backdrop" class="task-options-backdrop hidden" aria-hidden="true"></div>
+            <aside id="task-options-drawer" class="task-options-drawer hidden" aria-label="修改处理方案" aria-hidden="true">
+              <header><div><span class="section-kicker">处理方案</span><h2>修改“当前方案”</h2><p>保存方式、清理程度和验收条件只作用于这次创建的任务。</p></div><button id="close-task-options" class="action-icon" type="button" aria-label="关闭方案设置"><svg><use href="#i-close"/></svg></button></header>
+              <div class="task-options-scroll">
+            <label>清理程度 <button class="info-dot" type="button" data-tip="决定发现多少可清理元数据时才执行。第一次使用建议选“标准”。">!</button>
+              <select id="profile">
+                <option value="standard">标准 — 建议日常使用</option>
+                <option value="deep">彻底 — 发现目标信息就处理</option>
+                <option value="conservative">谨慎 — 只有体积明显异常才处理</option>
+              </select>
+              <span class="field-help">标准：预计可减少 64 MB（按 Windows 常用方式）或文件的 5% 时处理。</span>
+            </label>
+            <label>处理方式 <button class="info-dot" type="button" data-tip="你可以只检查不修改副本、符合条件后自动处理，或检查后由你批准。">!</button>
+              <select id="run-mode">
+                <option value="auto_if_eligible">符合条件后自动处理</option>
+                <option value="inspect_only">只检查并结束，不启动 Photoshop</option>
+                <option value="await_approval">检查后显示结果，再由我决定</option>
+              </select>
+              <span class="field-help">第一次处理重要文件，建议使用“先检查再决定”；检查后可选择开始处理或仅保留结果。</span>
+            </label>
+            <label>文件保存方式 <button class="info-dot" type="button" data-tip="推荐“安全副本”：源文件不变并验证新文件。“直接保存原文件”会永久覆盖源文件且不做保存后校对。">!</button>
+              <select id="execution-mode">
+                <option value="safe_copy">安全副本（推荐，完整校对）</option>
+                <option value="in_place">直接保存原文件（高风险，不校对）</option>
+              </select>
+              <span class="field-help">直接保存适合明确接受风险的批处理；执行后无法靠本工具撤销。</span>
+            </label>
+            <fieldset id="validation-options" class="validation-options full">
+              <legend>成品自动放行标准 <button class="info-dot" type="button" data-tip="只有勾选的项目才会阻止自动放行；未勾选项目仍会检查并写入报告，失败时显示为警告。源文件被改动、Photoshop 未完成等基础安全错误始终阻止。">!</button></legend>
+              <p class="field-help">按用途选择必须通过的检查。全部勾选最严格；减少勾选可降低人工复核数量，但也会接受更多变化。</p>
+              <div class="validation-grid">
+                <label class="check"><input type="checkbox" data-validation="task" value="target_xmp_removed" checked>目标 XMP 已清理 <button class="info-dot" type="button" data-tip="确认 DocumentAncestors 等目标元数据没有残留。">!</button></label>
+                <label class="check"><input type="checkbox" data-validation="task" value="structure_topology" checked>图层结构顺序一致 <button class="info-dot" type="button" data-tip="比较文档、图层和分组的数量与顺序。嵌入对象重新保存可能导致此项变化。">!</button></label>
+                <label class="check"><input type="checkbox" data-validation="task" value="smart_object_asset_ids" checked>智能对象资产 ID 一致 <button class="info-dot" type="button" data-tip="用于判断智能对象是否仍对应同一资产；Photoshop 重新保存时有时会重建内部 ID。">!</button></label>
+                <label class="check"><input type="checkbox" data-validation="task" value="smart_object_success" checked>智能对象全部处理成功 <button class="info-dot" type="button" data-tip="任何嵌入智能对象清理失败或计划覆盖不完整都会失败。">!</button></label>
+                <label class="check"><input type="checkbox" data-validation="task" value="reopen_success">保存后能重新打开 <button class="info-dot" type="button" data-tip="额外关闭并重新打开大文件，成本较高。Photoshop 模式默认不选；未来免 PS 二进制模式建议启用。">!</button></label>
+                <label class="check"><input type="checkbox" data-validation="task" value="pixel_exact" checked>处理前后像素完全一致 <button class="info-dot" type="button" data-tip="比较 Photoshop 处理前与处理后的画面，不需要为了此项重新打开整个文件。跨位深智能对象可能出现很小的数值差异。">!</button></label>
+                <label class="check"><input type="checkbox" data-validation="task" value="render_consistency">保存与重开画面一致 <button class="info-dot" type="button" data-tip="严格比较保存前、保存后和重新打开后的渲染结果；会增加一次大文件重开，默认不选。">!</button></label>
+                <label class="check"><input type="checkbox" data-validation="task" value="parser_clean" checked>文件解析无警告 <button class="info-dot" type="button" data-tip="要求处理后的 PSB/PSD 结构扫描器没有发现解析警告。">!</button></label>
+              </div>
+              <div class="coverage-policy-row">
+                <label>预检计划有遗漏时<select id="task-coverage-policy"><option value="strict">保留结果并进入人工复核（推荐）</option><option value="threshold">遗漏不超过阈值时允许放行</option><option value="skip">只记录，不阻止放行</option></select></label>
+                <label id="task-coverage-threshold-field" class="hidden">允许遗漏比例（%）<input id="task-coverage-threshold" type="number" min="0" max="100" step="0.1" value="5"><span class="field-help">这是兼容容错，不代表遗漏对象已完成清理。</span></label>
+              </div>
+            </fieldset>
+            <label id="backup-source-field" class="check hidden"><input id="backup-source" type="checkbox" checked>直接保存前先备份原文件（推荐）</label>
+            <div id="in-place-warning" class="notice danger full hidden"><strong>会覆盖原文件</strong><span>PSMetaC 会直接让 Photoshop 保存源文件，跳过结构、重新打开和像素校对。批量和自动处理均可用；建议始终勾选备份。</span></div>
+            <fieldset id="content-cleanup-options" class="content-cleanup-options full">
+              <legend>内容整理（默认关闭） <button class="info-dot" type="button" data-tip="这两项会删除图层，不只是清理元数据。当前仅处理根文档并生成安全副本；只要发生删除，结果就进入人工复核。">!</button></legend>
+              <p class="field-help">属于会改变工程结构的高风险选项。不会处理链接智能对象，也不会在自动处理文件夹或 MCP 任务中启用。</p>
+              <div class="content-cleanup-grid">
+                <label class="check"><input id="delete-hidden-layers" type="checkbox">删除隐藏图层 <button class="info-dot" type="button" data-tip="删除根文档中自身眼睛图标关闭的图层；隐藏组会连同组内全部子层一起删除，即使其中某个子层自身仍标记为显示。">!</button></label>
+                <label class="check"><input id="delete-empty-layers" type="checkbox">删除空图层 <button class="info-dot" type="button" data-tip="只删除边界为空的普通像素层。有蒙版、图层样式、剪贴关系、特殊类型或背景属性的图层会跳过并写入报告；不会删除空组。">!</button></label>
+              </div>
+              <div id="content-cleanup-warning" class="notice warning hidden"><strong>结果必须人工复核</strong><span>图层结构会按计划改变。PSMetaC 会保留源文件、记录每个删除项，并把处理结果放入人工复核区。</span></div>
+            </fieldset>
+            <label id="output-mode-field">成品保存位置
+              <select id="output-mode"><option value="specified_directory">我指定一个目录</option><option value="source_subfolder">源文件旁的 PSB_Cleaned</option></select>
+            </label>
+            <label id="output-picker">选择成品目录
+              <div class="pick"><input id="task-output" readonly><button type="button" data-pick="task-output">选择</button></div>
+            </label>
+              </div>
+              <footer><span id="task-options-footer-summary">修改会立即反映到当前方案摘要。</span><button id="apply-task-options" class="primary" type="button">完成设置</button></footer>
+            </aside>
+            <div id="batch-capacity" class="batch-capacity full hidden" aria-live="polite"></div>
+            <div class="full form-submit"><button id="create-tasks-button" class="primary" type="submit" disabled>确认并创建 0 个任务</button><p id="task-result" class="message"></p></div>
+          </form>
+        </section>
+
+        <section id="view-jobs" class="view">
+          <article class="panel">
+            <div class="panel-head"><div><h2>任务记录</h2><p>“已完成”包含成功、无需处理、需要复核、失败和取消的任务；每个文件都保留自己的结果。</p></div><button id="refresh-jobs">刷新</button></div>
+            <div class="job-pool-tabs" role="tablist" aria-label="任务列表">
+              <button class="job-pool-tab active" type="button" data-job-pool="active" role="tab">进行中 <span id="active-job-count">0</span></button>
+              <button class="job-pool-tab" type="button" data-job-pool="completed" role="tab">已完成 <span id="completed-job-count">0</span></button>
+            </div>
+            <div class="job-filter-toolbar">
+              <input id="job-search" type="search" placeholder="搜索文件名或路径">
+              <button id="toggle-job-filters" type="button" aria-expanded="false" aria-controls="job-filter-panel"><svg><use href="#i-settings"/></svg>筛选 <span id="active-job-filter-count" class="hidden">0</span></button>
+            </div>
+            <section id="job-filter-panel" class="job-filter-panel hidden" aria-label="任务筛选条件">
+              <div class="job-filter-panel-head"><div><strong>筛选任务</strong><span>同一组内满足任一项；不同组之间需同时满足。</span></div><div class="job-filter-panel-actions"><button id="clear-job-filters" class="hidden" type="button">清空筛选</button><button id="manage-user-tags" type="button"><svg><use href="#i-tag"/></svg>管理标签</button></div></div>
+              <div id="job-filter-chips" class="job-filter-chips"></div>
+            </section>
+            <div id="job-filter-summary" class="job-filter-summary"></div>
+            <div id="job-selection-bar" class="selection-bar hidden"><strong id="selected-job-count">已选择 0 项</strong><button id="tag-selected-jobs">添加或修改标签</button><button id="remove-selected-jobs" class="danger-quiet">从列表移除</button><button id="clear-job-selection">取消选择</button></div>
+            <div id="jobs-table"></div>
+          </article>
+        </section>
+
+        <section id="view-reports" class="view">
+          <article class="panel"><div class="panel-head"><div><h2>每个文件一份报告</h2><p>报告会说明源文件是否未变、体积变化、清理量、智能对象问题和像素比较结果。</p></div></div><div id="reports-list"></div></article>
+        </section>
+
+        <section id="view-watchers" class="view">
+          <article class="panel watcher-page">
+            <div class="panel-head"><div><h2>自动处理文件夹</h2><p>由 PSMetaC 桌面程序定时扫描，不需要 MCP；每个文件夹使用自己固定的规则。</p></div><div class="panel-actions"><button id="scan-watchers-now" type="button">重新扫描</button><button id="open-watcher-editor" class="primary" type="button">添加文件夹</button></div></div>
+            <div class="watcher-boundary"><svg><use href="#i-alert"/></svg><div><strong>扫描不会占用 Photoshop，实际处理会</strong><span>发现文件和等待稳定期间可以继续设计；清理、保存、重新打开和检查会使用设置中选定的 Photoshop。该版本正忙时任务会等待，开始执行后请不要操作同一版本。</span></div></div>
+            <div class="watcher-flow" aria-label="自动处理流程">
+              <span><i>1</i><strong>发现文件</strong><small>扫描 PSD / PSB</small></span>
+              <b aria-hidden="true">›</b>
+              <span><i>2</i><strong>等待稳定</strong><small>确认复制完成</small></span>
+              <b aria-hidden="true">›</b>
+              <span><i>3</i><strong>安全预检</strong><small>路径与空间检查</small></span>
+              <b aria-hidden="true">›</b>
+              <span><i>4</i><strong>创建任务</strong><small>进入单文件队列</small></span>
+            </div>
+            <section id="watcher-editor" class="watcher-editor hidden">
+              <div class="watcher-editor-head"><div><strong>添加自动处理文件夹</strong><span>保存后立即执行第一次扫描。</span></div><button id="close-watcher-editor" type="button">收起设置</button></div>
+              <form id="watcher-form" class="form-grid">
+              <label class="full">要监控的文件夹<div class="pick"><input id="watcher-path" readonly placeholder="选择文件夹"><button type="button" data-pick="watcher-path">选择</button></div></label>
+              <label>清理程度 <button class="info-dot" type="button" data-tip="标准：达到 64 MB（按 Windows 常用方式）或文件的 5%；彻底：发现目标信息就处理；谨慎：达到 256 MB 或文件的 10%。">!</button><select id="watcher-profile"><option value="standard">标准</option><option value="deep">彻底</option><option value="conservative">谨慎</option></select></label>
+              <label class="check"><input id="watcher-recursive" type="checkbox">同时扫描子文件夹 <button class="info-dot" type="button" data-tip="开启后会依次扫描所有子文件夹；成品目录、软件数据目录和符号链接会跳过，避免重复处理。">!</button></label>
+              <label>文件保存方式<select id="watcher-execution-mode"><option value="safe_copy">安全副本（推荐）</option><option value="in_place">直接保存原文件（高风险）</option></select></label>
+              <label id="watcher-backup-source-field" class="check hidden"><input id="watcher-backup-source" type="checkbox" checked>直接保存前先备份原文件（推荐）</label>
+              <div id="watcher-in-place-warning" class="notice danger full hidden"><strong>无人值守覆盖</strong><span>监控到符合条件的文件后，会在无人确认的情况下直接覆盖源文件并跳过校对。建议保留备份。</span></div>
+              <label id="watcher-output-mode-field">成品保存位置<select id="watcher-output-mode"><option value="specified_directory">指定成品目录</option><option value="source_subfolder">源文件旁的 PSB_Cleaned</option></select></label>
+              <label id="watcher-output-picker" class="full">成品目录<div class="pick"><input id="watcher-output" readonly><button type="button" data-pick="watcher-output">选择</button></div></label>
+              <div class="coverage-policy-row full" id="watcher-coverage-options">
+                <label>预检计划有遗漏时 <button class="info-dot" type="button" data-tip="预检器与 Photoshop 实际看到的智能对象可能存在少量差异。推荐保留结果并交给人工复核；也可以设置允许遗漏的比例。">!</button><select id="watcher-coverage-policy"><option value="strict">保留结果并进入人工复核（推荐）</option><option value="threshold">遗漏不超过阈值时允许放行</option><option value="skip">只记录，不阻止放行</option></select></label>
+                <label id="watcher-coverage-threshold-field" class="hidden">允许遗漏比例<input id="watcher-coverage-threshold" type="number" min="0" max="100" step="0.1" value="5"><span class="field-help">例如 5 表示遗漏不超过计划目标的 5% 时继续按其他验收项判断。</span></label>
+              </div>
+              <fieldset id="watcher-validation-options" class="validation-options full">
+                <legend>自动放行标准 <button class="info-dot" type="button" data-tip="无人值守任务会按这些标准决定进入成品目录还是人工复核。未勾选项目仍记录结果。">!</button></legend>
+                <div class="validation-grid compact">
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="target_xmp_removed" checked>目标 XMP 已清理</label>
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="structure_topology" checked>图层结构顺序一致</label>
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="smart_object_asset_ids" checked>智能对象资产 ID 一致</label>
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="smart_object_success" checked>智能对象全部成功</label>
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="reopen_success">保存后能重新打开</label>
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="pixel_exact" checked>处理前后像素完全一致</label>
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="render_consistency">保存与重开画面一致</label>
+                  <label class="check"><input type="checkbox" data-validation="watcher" value="parser_clean" checked>文件解析无警告</label>
+                </div>
+              </fieldset>
+              <div id="watcher-preview" class="watcher-preview full">选择文件夹后会显示当前扫描结果。</div>
+              <div class="full form-submit"><button class="primary" type="submit">开始监控这个文件夹</button><p id="watcher-result" class="message"></p></div>
+              </form>
+            </section>
+            <div class="watcher-list-head"><div><strong>正在管理的文件夹</strong><span>暂停只停止后续扫描，不会取消已经创建的任务。</span></div></div>
+            <div id="watcher-list"></div>
+          </article>
+        </section>
+
+        <section id="view-quarantine" class="view">
+          <article class="panel quarantine-page">
+            <div class="panel-head"><div><h2>隔离文件</h2><p>这里保存没有自动通过验收的处理副本。先查看画面，再决定接受、继续隔离或放弃结果。</p></div><div class="panel-actions"><button id="open-quarantine-settings" type="button">清理设置</button><button id="quarantine-clean-now" class="danger-quiet" type="button">立即清理…</button></div></div>
+            <div class="quarantine-summary" id="quarantine-summary"><strong>正在读取隔离区…</strong><span>源文件、成品、备份、报告和日志不在自动清理范围。</span></div>
+            <div class="quarantine-tabs" role="tablist" aria-label="隔离文件筛选">
+              <button class="active" type="button" data-quarantine-filter="all">全部 <span id="quarantine-count-all">0</span></button>
+              <button type="button" data-quarantine-filter="pending">等待复核 <span id="quarantine-count-pending">0</span></button>
+              <button type="button" data-quarantine-filter="kept">继续隔离 <span id="quarantine-count-kept">0</span></button>
+              <button type="button" data-quarantine-filter="eligible">可以清理 <span id="quarantine-count-eligible">0</span></button>
+            </div>
+            <div id="quarantine-list"></div>
+          </article>
+        </section>
+
+        <section id="view-diagnostics" class="view">
+          <article class="panel diagnostics-panel">
+            <div id="diagnostics-result" class="diagnosis empty-diagnosis"><div class="diagnosis-head"><span class="diagnosis-icon"><svg><use href="#i-health"/></svg></span><div><h3>尚未开始检测</h3><p>进入此页面不会连接或唤醒 Photoshop。</p></div></div><p class="next-action"><strong>点击右上角“开始检测”后，将检查自动化连接；所选 Photoshop 尚未运行时可能被启动并显示到前台。</strong></p></div>
+            <div id="diagnostic-export-status" class="field-help"></div>
+            <details class="technical diagnostics-technical"><summary>查看技术详情 <span>供测试人员或开发者排查</span></summary><pre id="diagnostics-technical">尚未检查</pre></details>
+            <div class="diagnostic-log-note"><svg><use href="#i-alert"/></svg><span>诊断日志不包含 PSD / PSB 文件本体、成品、隔离副本、预览图、备份或通信令牌，但可能包含文件名、本地路径、电脑名和文件指纹。</span></div>
+          </article>
+        </section>
+
+        <section id="view-settings" class="view">
+          <article class="panel settings-panel">
+            <form id="settings-form" class="form-grid settings-layout">
+              <aside class="settings-category-nav" aria-label="设置分类">
+                <button class="settings-category" type="button" data-settings-category="general" title="常规"><svg><use href="#i-settings"/></svg><span>常规</span></button>
+                <button class="settings-category" type="button" data-settings-category="files" title="文件处理"><svg><use href="#i-files"/></svg><span>文件处理</span></button>
+                <button class="settings-category active" type="button" data-settings-category="photoshop" title="Photoshop 与执行"><svg><use href="#i-screen"/></svg><span>Photoshop 与执行</span></button>
+                <button class="settings-category" type="button" data-settings-category="validation" title="验收与复核"><svg><use href="#i-scan-eye"/></svg><span>验收与复核</span></button>
+                <button class="settings-category" type="button" data-settings-category="storage" title="存储与清理"><svg><use href="#i-storage"/></svg><span>存储与清理</span></button>
+                <button class="settings-category" type="button" data-settings-category="mcp" title="MCP 与日志"><svg><use href="#i-terminal"/></svg><span>MCP 与日志</span></button>
+                <button class="settings-category" type="button" data-settings-category="experimental" title="实验功能"><svg><use href="#i-flask"/></svg><span>实验功能</span></button>
+              </aside>
+
+              <div class="settings-content">
+                <section class="settings-pane" data-settings-pane="general">
+                  <div class="settings-pane-heading"><h2>常规</h2><p>管理文件选择、自动监控等待和高风险说明偏好。</p></div>
+                  <div class="setting-card full">
+                    <div class="section-copy"><h3>文件选择器</h3><p>PSMetaC 会分别记住上次选择源文件、成品、监控文件夹和设置文件的位置。</p></div>
+                    <button id="clear-recent-directories" class="full-width-action" type="button">清除最近使用目录</button>
+                  </div>
+                  <div class="setting-card full">
+                    <div class="section-copy"><h3>自动监控等待</h3><p>确认文件已经复制完成后才进行安全预检，避免读取未写完的 PSD / PSB。</p></div>
+                    <label>文件保持不变的时间（秒）<input id="stability" type="number" min="10" max="3600"><span class="field-help">建议保持 60 秒。时间越长越稳妥，但发现新文件后的等待也越久。</span></label>
+                  </div>
+                  <div class="setting-card full">
+                    <div class="section-copy"><h3>危险操作提醒</h3><p id="danger-warning-status">直接保存原文件时会显示一次确认。</p></div>
+                    <button id="restore-danger-warning" class="full-width-action" type="button">恢复危险操作提醒</button>
+                  </div>
+                </section>
+
+                <section class="settings-pane" data-settings-pane="files">
+                  <div class="settings-pane-heading"><h2>文件处理</h2><p>这些目录只约束自动处理文件夹和 MCP；手动选择仍以本次精确授权为准。</p></div>
+                  <div class="setting-card full settings-root-card">
+                    <label>允许自动读取的目录（每行一个）<div class="pick vertical-pick"><textarea id="allowed-input-roots" rows="3" placeholder="例如：G:\Desktop\待处理"></textarea><button type="button" data-append-root="allowed-input-roots">添加目录</button></div><span class="field-help">自动处理文件夹和 MCP 只能从这些目录读取。</span></label>
+                  </div>
+                  <div class="setting-card full settings-root-card">
+                    <label>允许自动保存的目录（每行一个）<div class="pick vertical-pick"><textarea id="allowed-output-roots" rows="3" placeholder="例如：G:\Desktop\清理成品"></textarea><button type="button" data-append-root="allowed-output-roots">添加目录</button></div><span class="field-help">无人值守任务只能把成品保存到这些目录。</span></label>
+                  </div>
+                  <div class="setting-card full settings-root-card">
+                    <label>永不处理的目录（可选） <button class="info-dot" type="button" data-tip="这里为空时不设置固定禁区。一旦填写，手动选择、自动监控和 MCP 都不能处理其中的文件。">!</button><div class="pick vertical-pick"><textarea id="denied-roots" rows="3" placeholder="留空表示不设置固定禁区"></textarea><button type="button" data-append-root="denied-roots">添加目录</button></div><span class="field-help">这是跨入口的硬性禁区；留空表示不额外设置。</span></label>
+                  </div>
+                </section>
+
+                <section class="settings-pane active" data-settings-pane="photoshop">
+                  <div class="settings-pane-heading"><h2>Photoshop 与执行</h2><p>选择 PSMetaC 使用的 Photoshop，并决定队列如何等待和预检。</p></div>
+                  <div class="setting-card full">
+                    <div class="section-copy"><h3>使用哪个 Photoshop <button class="info-dot" type="button" data-tip="PSMetaC 只调用这里选中的版本。多版本电脑可以把另一个版本留给设计工作。">!</button></h3><p>程序会核对安装路径、COM 注册和脚本实际回报版本，避免误连正在工作的另一个版本。</p></div>
+                    <div id="photoshop-version-cards" class="photoshop-version-cards"><div class="settings-empty">点击“重新读取安装列表”检测这台电脑上的 Photoshop。</div></div>
+                    <label class="settings-native-select">检测到的 Photoshop<select id="photoshop-executable"><option value="">尚未读取安装列表</option></select></label>
+                    <p class="settings-selection-note" id="photoshop-selection-status">“重新读取安装列表”只读取安装与注册信息，不会启动 Photoshop。</p>
+                  </div>
+                  <div class="setting-card full">
+                    <div class="section-copy"><h3>连接方式 <button class="info-dot" type="button" data-tip="连接接口相当于 PSMetaC 找到 Photoshop 的地址。不了解 COM 时保持自动选择。">!</button></h3><p>通常使用自动选择；只有自动连接失败时，才需要手工指定接口。</p></div>
+                    <div class="settings-connection-row">
+                      <label>连接方式<select id="photoshop-connection-mode"><option value="auto">自动选择（推荐）</option><option value="specified">指定连接接口</option></select></label>
+                      <div class="connection-actions"><button id="refresh-photoshop-installations" type="button">重新读取安装列表</button><button id="test-photoshop-connection" class="primary" type="button">测试当前连接</button></div>
+                    </div>
+                    <label id="photoshop-progid-field">连接接口 <button class="info-dot" type="button" data-tip="可选择检测到的接口，也可手工输入 Photoshop.Application 开头的 ProgID。手工输入不能绕过实际版本和路径核对。">!</button><input id="photoshop-progid" list="photoshop-progid-options" placeholder="例如 Photoshop.Application.190"><datalist id="photoshop-progid-options"></datalist><span class="field-help">版本专用接口最适合多版本电脑；通用接口跟随 Windows 默认 Photoshop；兼容别名只在其他接口失败时测试。</span></label>
+                    <div id="photoshop-connection-result" class="connection-result neutral"><strong>尚未测试</strong><span>指定连接必须测试成功后才能保存；自动选择会在任务开始前再次复核。</span></div>
+                    <div class="notice info"><strong>测试会怎样？</strong><span>只查询版本和安装位置，不会打开、修改或保存 PSD / PSB。若所选 Photoshop 尚未运行，测试可能启动它并显示到前台。</span></div>
+                  </div>
+                  <div class="setting-card full settings-switch-list">
+                    <div class="section-copy"><h3>任务执行方式</h3><p>这些选项只控制等待和提前检查，不改变清理内容。</p></div>
+                    <div class="settings-switch-row is-fixed"><span><strong>Photoshop 正忙时等待</strong><small>不抢占用户文档，也不会强退 Photoshop；空闲后自动继续。</small></span><b>始终开启</b></div>
+                    <div class="settings-switch-row is-fixed"><span><strong>清理期间只使用所选版本</strong><small>避免任务跳到你正在工作的另一个 Photoshop 版本。</small></span><b>始终开启</b></div>
+                    <label class="settings-switch-row"><span><strong>提前检查队列中的下一个文件</strong><small>按队列顺序逐个预检，可减少任务间等待；会增加磁盘与处理器占用。</small></span><input id="pipeline-preflight" type="checkbox" aria-label="提前检查队列中的下一个文件"></label>
+                  </div>
+                </section>
+
+                <section class="settings-pane" data-settings-pane="validation">
+                  <div class="settings-pane-heading"><h2>验收与复核</h2><p>验收标准属于处理方案；不同交付可以使用不同要求，不在这里强制成一个全局标准。</p></div>
+                  <div class="setting-card full settings-explanation-list">
+                    <div><strong>画面优先</strong><span>允许在设定的像素差异范围内自动通过，降低逐文件人工比较成本。</span></div>
+                    <div><strong>工程完整优先</strong><span>重点检查图层结构、智能对象和重新打开结果，适合继续编辑的工程文件。</span></div>
+                    <div><strong>严格一致</strong><span>画面、结构、目标元数据和智能对象检查全部通过后才自动放行。</span></div>
+                  </div>
+                  <div class="notice info full"><strong>在哪里修改？</strong><span>进入“处理文件”，选择方案后点击“修改方案”。自动处理文件夹会保存自己的固定方案，不会弹窗阻碍无人值守。</span></div>
+                  <button class="full-width-action" type="button" data-go="new-task">前往处理文件并查看方案</button>
+                </section>
+
+                <section class="settings-pane" data-settings-pane="storage">
+                  <div class="settings-pane-heading"><h2>存储与清理</h2><p>控制工作副本与隔离结果的保留方式；成品、备份、报告和日志不在自动清理范围。</p></div>
+                  <div class="setting-card full">
+                    <div class="section-copy"><h3>工作文件</h3><p>工作副本只用于安全处理，成品发布后通常不再需要。</p></div>
+                    <label>工作文件保留方式<select id="retention"><option value="temporary_only">完成后清理工作副本</option><option value="manual">工作副本由我手动清理</option></select></label>
+                  </div>
+                  <div class="setting-card full">
+                    <div class="section-copy"><h3>隔离文件清理</h3><p>只把符合条件且未锁定的隔离目录移入 Windows 回收站；人工选择“继续隔离”的项目会自动锁定。</p></div>
+                    <label class="check full"><input id="quarantine-cleanup-enabled" type="checkbox">按下面的时间或容量条件自动清理 <button class="info-dot" type="button" data-tip="默认关闭。开启后每 6 小时检查一次，并为每次清理写入操作日志。">!</button></label>
+                    <div class="settings-field-grid">
+                      <label>保留时间（天）<input id="quarantine-retention-days" type="number" min="0" max="3650" step="1"><span class="field-help">0 表示不使用时间条件。</span></label>
+                      <label>隔离区容量上限（GB）<input id="quarantine-max-gb" type="number" min="0" max="100000" step="1"><span class="field-help">0 表示不使用容量条件。</span></label>
+                      <label>触发方式<select id="quarantine-cleanup-trigger"><option value="any">任一条件达到就清理</option><option value="all">所有已启用条件同时达到才清理</option></select><span class="field-help">“所有条件”更保守，但可能持续超过容量上限。</span></label>
+                    </div>
+                    <div class="quarantine-maintenance-card">
+                      <div><strong id="quarantine-cleanup-summary">点击“查看预计清理”读取当前隔离区。</strong><span id="quarantine-cleanup-detail">立即清理前会再次列出候选数量和容量，并要求确认。</span></div>
+                      <div class="maintenance-actions"><button id="preview-quarantine-cleanup" type="button">查看预计清理</button><button id="clean-quarantine-now" class="danger-outline" type="button">立即清理</button></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="settings-pane" data-settings-pane="mcp">
+                  <div class="settings-pane-heading"><h2>MCP 与日志</h2><p>MCP 只通过本机接口提交受控任务，不能修改安全目录、删除文件或执行任意脚本。</p></div>
+                  <div class="setting-card full settings-explanation-list">
+                    <div><strong>本机调用</strong><span>第一版不开放网络端口；调用仍需满足“文件处理”中的自动读写目录。</span></div>
+                    <div><strong>每步有记录</strong><span>任务状态写入 JSONL 事件日志，Photoshop 执行保留详细日志，每个文件生成独立报告。</span></div>
+                    <div><strong>诊断日志可导出</strong><span>日志包不含 PSD / PSB 文件本体，但可能包含文件名、路径、电脑名和文件指纹。</span></div>
+                  </div>
+                  <button id="open-diagnostics-from-settings" class="full-width-action" type="button">前往运行检测并导出诊断日志</button>
+                  <details class="technical full"><summary>查看技术配置</summary><pre id="settings-json"></pre></details>
+                </section>
+
+                <section class="settings-pane" data-settings-pane="experimental">
+                  <div class="settings-pane-heading"><h2>实验功能</h2><p>实验功能可以用于沙盒测试，但兼容覆盖和稳定性尚未达到正式支持标准。</p></div>
+                  <div class="setting-card full settings-switch-list">
+                    <label class="settings-switch-row"><span><strong>允许创建 PSD 实验任务</strong><small>允许手动选择 PSD，并执行只读检查或等待批准后处理。</small></span><input id="experimental-psd" type="checkbox" aria-label="允许创建 PSD 实验任务"></label>
+                    <label class="settings-switch-row"><span><strong>允许 PSD 无人值守自动处理</strong><small>批处理、自动处理文件夹和 MCP 可自动执行 PSD；失败或验收未通过仍进入人工复核。</small></span><input id="experimental-psd-unattended" type="checkbox" aria-label="允许 PSD 无人值守自动处理"></label>
+                  </div>
+                  <div class="notice warning full"><strong>PSD 仍是实验功能</strong><span>无人值守不会关闭路径保护、源文件指纹、磁盘检查、取消、日志、报告或隔离规则。请先用沙盒副本和“安全副本”模式积累测试结果。</span></div>
+                </section>
+
+                <div class="settings-save-state"><p id="settings-result" class="message">修改后请点击右上角“保存设置”。</p></div>
+              </div>
+            </form>
+          </article>
+        </section>
+
+        <section id="view-help" class="view">
+          <article class="panel help-guide">
+            <aside class="help-topic-nav" aria-label="说明主题">
+              <button class="help-topic active" type="button" data-help-topic="intro" title="认识 PSMetaC"><svg><use href="#i-help"/></svg><span>认识 PSMetaC</span></button>
+              <button class="help-topic" type="button" data-help-topic="start" title="快速开始"><svg><use href="#i-play"/></svg><span>快速开始</span></button>
+              <button class="help-topic" type="button" data-help-topic="review" title="结果与复核"><svg><use href="#i-review"/></svg><span>结果与复核</span></button>
+              <button class="help-topic" type="button" data-help-topic="safety" title="安全与文件"><svg><use href="#i-check"/></svg><span>安全与文件</span></button>
+              <button class="help-topic" type="button" data-help-topic="faq" title="常见问题"><svg><use href="#i-alert"/></svg><span>常见问题</span></button>
+            </aside>
+
+            <div class="help-topic-content">
+              <section class="help-topic-pane active" data-help-pane="intro">
+                <div class="help-topic-heading"><h2>PSMetaC 是做什么的？</h2><p>清理 Photoshop 工程文件中的冗余元数据，同时尽量保护图层、画面和源文件。</p></div>
+                <div class="help-process">
+                  <div><strong>选择 PSD / PSB</strong><span>手动选择或自动发现文件</span></div><b>→</b>
+                  <div><strong>清理冗余元数据</strong><span>XMP 与 DocumentAncestors</span></div><b>→</b>
+                  <div><strong>检查并生成报告</strong><span>说明结果、差异和下一步</span></div>
+                </div>
+                <h3 class="help-section-title">它主要解决三类问题</h3>
+                <div class="help-benefits">
+                  <div><span class="help-benefit-icon"><svg><use href="#i-check"/></svg></span><strong>文件脱敏</strong><p>减少编辑溯源和历史信息随文件对外交付。</p></div>
+                  <div><span class="help-benefit-icon"><svg><use href="#i-storage"/></svg></span><strong>体积瘦身</strong><p>清理反复累积、可能占用大量空间的 XMP 数据。</p></div>
+                  <div><span class="help-benefit-icon"><svg><use href="#i-report"/></svg></span><strong>交付检查</strong><p>用报告记录源文件、清理量、画面和结构检查结果。</p></div>
+                </div>
+                <div class="help-remember"><img src="assets/psmetac-logo.svg" alt="" width="36" height="36"><div><strong>新用户先记住：默认使用“安全副本”</strong><p>源文件不会交给 Photoshop；处理结果通过检查后再作为成品。任何自动判断都不能阻止你打开文件进行人工确认。</p></div></div>
+                <div class="notice info"><strong>“元数据清理”不等于完全匿名</strong><span>PSMetaC 重点处理已识别的冗余 XMP 和 DocumentAncestors，不承诺删除文件中所有身份或业务信息。</span></div>
+              </section>
+
+              <section class="help-topic-pane" data-help-pane="start">
+                <div class="help-topic-heading"><h2>第一次处理文件</h2><p>只需要完成四步，高级选项可以以后再了解。</p></div>
+                <div class="help-plain-list">
+                  <div><b>1</b><span><strong>添加 PSD / PSB 文件</strong><small>勾选代表会创建任务；取消勾选会保留在清单但暂不处理。文件夹会递归扫描。</small></span></div>
+                  <div><b>2</b><span><strong>选择处理方案</strong><small>不确定时使用“安全副本 + 标准清理”。重要文件第一次可先选择“只检查”。</small></span></div>
+                  <div><b>3</b><span><strong>确认配置清单</strong><small>开始前再次确认保存方式、清理内容、验收标准和是否自动替换。</small></span></div>
+                  <div><b>4</b><span><strong>查看结果或人工复核</strong><small>通过的任务进入“已完成”；自动检查未通过的任务进入“需要复核”。</small></span></div>
+                </div>
+                <button class="full-width-action" type="button" data-go="new-task">前往处理文件</button>
+              </section>
+
+              <section class="help-topic-pane" data-help-pane="review">
+                <div class="help-topic-heading"><h2>什么时候需要人工复核？</h2><p>处理结果已经生成，但至少一项自动检查没有达到标准；进入“人工复核”并点击“开始复核”。</p></div>
+                <div class="help-plain-list">
+                  <div><b><svg><use href="#i-scan-eye"/></svg></b><span><strong>先比较处理前后画面</strong><small>可拖动分隔线，也可使用透明叠加和真实像素差值模式。</small></span></div>
+                  <div><b><svg><use href="#i-files"/></svg></b><span><strong>再查看图层与智能对象</strong><small>重点确认文字、蒙版、隐藏内容和需要继续编辑的对象是否正常。</small></span></div>
+                  <div><b><svg><use href="#i-review"/></svg></b><span><strong>最后由你决定</strong><small>接受为成品、备份并替换原件、继续隔离，或放弃并清理处理结果。</small></span></div>
+                </div>
+                <h3 class="help-section-title">常见结果</h3>
+                <dl class="help-definitions"><dt>无需处理</dt><dd>没有发现目标信息，或清理量未达到当前方案门槛；不会启动 Photoshop。</dd><dt>安全阻止</dt><dd>路径、格式、磁盘空间或环境检查不满足安全条件。</dd><dt>等待 Photoshop</dt><dd>所选 Photoshop 正忙，PSMetaC 不抢占用户文档。</dd><dt>需要复核</dt><dd>副本可以打开，但自动验收至少一项未通过；人有最终决定权。</dd></dl>
+              </section>
+
+              <section class="help-topic-pane" data-help-pane="safety">
+                <div class="help-topic-heading"><h2>源文件和处理结果如何保护？</h2><p>不同保存模式的风险不同，任务开始前会再次列出实际动作。</p></div>
+                <div class="help-plain-list">
+                  <div><b><svg><use href="#i-files"/></svg></b><span><strong>安全副本</strong><small>先复制并校验，再由 Photoshop 处理副本；这是默认推荐方式。</small></span></div>
+                  <div><b><svg><use href="#i-open"/></svg></b><span><strong>直接保存原件</strong><small>速度更快、占用空间更少，但跳过保存后校对；建议开启处理前备份。</small></span></div>
+                  <div><b><svg><use href="#i-review"/></svg></b><span><strong>隔离文件</strong><small>自动检查未通过的副本保留在隔离区，仍可随时打开和人工决定。</small></span></div>
+                </div>
+                <div class="notice warning"><strong>PSD 仍是实验功能</strong><span>PSD 与 PSB 的保存行为并不完全相同。可在“设置 → 实验功能”开启，但建议先用于沙盒副本。</span></div>
+              </section>
+
+              <section class="help-topic-pane" data-help-pane="faq">
+                <div class="help-topic-heading"><h2>常见问题</h2><p>先给结论；技术原因只在需要排查时展开。</p></div>
+                <details class="help-question" open><summary>为什么智能对象处理完后还要等待？</summary><p>之后仍需清理根文档、保存、重新打开、比较画面与结构并生成报告；任务阶段会继续显示这些工作。</p></details>
+                <details class="help-question"><summary>为什么 4.27 GB 的文件可能需要 22.8 GB 空间？</summary><p>安全副本、工作副本、Photoshop 保存峰值、像素比较缓存和最低保留空间会同时计入。任务预检会按实际模式拆分说明。</p></details>
+                <details class="help-question"><summary>自动处理时还能使用 Photoshop 吗？</summary><p>扫描和等待稳定不占用 Photoshop；清理、保存和检查会使用所选版本。可在未被 PSMetaC 选中的另一个版本中继续工作。</p></details>
+                <details class="help-question"><summary>窗口关闭后在哪里找？</summary><p>任务会继续在系统托盘运行。若图标未直接显示，请点击 Windows 任务栏右侧的“^”；单击 PSMetaC 图标即可重新打开窗口。</p></details>
+                <p class="copyright">PaceSpace Metadata Cleaner（PSMetaC）<br>Copyright © PaceSpace. All Rights Reserved.</p>
+              </section>
+            </div>
+          </article>
+        </section>
+
+        <section id="view-about" class="view">
+          <article class="panel about-page">
+            <section class="about-identity">
+              <img src="assets/psmetac-logo.svg" alt="PSMetaC 图标" width="58" height="58">
+              <div><span>PaceSpace Metadata Cleaner</span><h2>PSMetaC</h2><p>PSD &amp; PSB 元数据一键清理与脱敏工具</p></div>
+              <div class="about-version"><span>当前版本</span><strong id="about-version">读取中…</strong><b title="Alpha 表示仍在开发验证阶段，不是更新或连接通道。">版本阶段：Alpha 开发版</b></div>
+            </section>
+
+            <div class="about-grid">
+              <section class="about-section">
+                <h2>为 Photoshop 工程文件清理冗余元数据</h2>
+                <p>PSMetaC 专业清理冗余 XMP 元数据与 DocumentAncestors 溯源信息，实现文件脱敏和体积瘦身。</p>
+                <p>处理时保留图层与画面内容，并用报告记录清理量、自动检查和人工决定。</p>
+                <div class="about-principles">
+                  <div><svg><use href="#i-screen"/></svg><span><strong>只在本机处理</strong><small>文件不会上传到网络服务。</small></span></div>
+                  <div><svg><use href="#i-files"/></svg><span><strong>默认保护源文件</strong><small>安全副本先复制并校验，再交给 Photoshop。</small></span></div>
+                  <div><svg><use href="#i-report"/></svg><span><strong>诊断包不含工程文件本体</strong><small>但可能包含文件名、路径、电脑名和文件指纹。</small></span></div>
+                </div>
+              </section>
+              <section class="about-section">
+                <h2>文件格式支持</h2>
+                <div class="about-support"><b>正式支持</b><span><strong>PSB</strong><small>完整预检、清理、保存、重新打开和验收流程。</small></span></div>
+                <div class="about-support experimental"><b>实验支持</b><span><strong>PSD</strong><small>允许手动与无人值守任务；仍需积累不同 Photoshop 版本的测试样本。</small></span></div>
+                <p>正式支持版本以实机验证清单为准；其他版本允许执行，但会标记为“尚未验证”。</p>
+              </section>
+            </div>
+
+            <section id="about-release" class="about-release">
+              <div><h2><span id="about-release-version">v0.2.0-alpha.6</span> 更新摘要</h2><p>新增、优化与修复分开记录</p></div>
+              <div class="about-release-grid">
+                <section><b>新增</b><ul><li>安全副本可选删除根文档隐藏图层</li><li>保守识别并删除普通空像素层</li><li>历史处理成果与磁盘变化仪表盘</li></ul></section>
+                <section><b>优化</b><ul><li>图层删除逐项写入日志与单文件报告</li><li>新增“整理根文档图层”真实进度阶段</li><li>统计区分实际腾出、结果缩小与新增占用</li></ul></section>
+                <section><b>修复</b><ul><li>旧任务数据库自动补齐图层整理字段</li><li>图层结构变化不再被误判成普通成功</li><li>诊断 ZIP 不再依赖缺失的 PowerShell 模块</li></ul></section>
+              </div>
+            </section>
+
+            <details class="about-license"><summary>第三方许可与版权 <span>Electron、SQLite 等</span></summary><p>第三方组件按各自许可证使用，完整许可证文本随安装目录提供。</p></details>
+            <p class="copyright">PaceSpace Metadata Cleaner（PSMetaC）Copyright © PaceSpace. All Rights Reserved.</p>
+          </article>
+        </section>
+      </div>
+    </main>
+    <section id="global-task-dock" class="global-task-dock is-idle" aria-live="polite" aria-label="当前任务">
+      <span id="global-task-thumb" class="global-task-thumb" aria-hidden="true">PS</span>
+      <div class="global-task-copy">
+        <strong id="global-task-title">当前没有任务</strong>
+        <span id="global-task-detail">PSMetaC 已准备好处理文件</span>
+      </div>
+      <div id="global-task-progress" class="global-task-progress hidden">
+        <div class="progress-track"><i id="global-task-progress-bar" style="width:0%"></i></div>
+        <strong id="global-task-percent">0%</strong>
+      </div>
+      <button id="global-task-toggle" class="action-icon hidden" type="button" title="完成当前项后暂停" aria-label="完成当前项后暂停"><svg><use href="#i-pause"/></svg></button>
+      <button id="global-task-stop" class="action-icon danger hidden" type="button" title="完成当前项后终止" aria-label="完成当前项后终止"><svg><use href="#i-cancel"/></svg></button>
+      <button id="global-task-primary" class="global-task-primary primary" type="button">处理文件</button>
+      <button id="global-task-open" class="action-icon hidden" type="button" title="展开任务详情" aria-label="展开任务详情"><svg><use href="#i-chevron-up"/></svg></button>
+    </section>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+  <div id="danger-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="danger-dialog-title">
+    <section class="danger-dialog">
+      <p class="eyebrow">高风险操作</p>
+      <h2 id="danger-dialog-title">确认直接保存原文件</h2>
+      <p id="danger-dialog-message"></p>
+      <label id="danger-never-remind-field" class="check danger-never"><input id="danger-never-remind" type="checkbox">以后不再提醒（可在“设置”中恢复）</label>
+      <div class="dialog-actions">
+        <button id="danger-cancel" type="button">取消</button>
+        <button id="danger-confirm" class="warning-action" type="button">我已了解，继续</button>
+      </div>
+    </section>
+  </div>
+  <div id="task-action-menu" class="task-action-menu hidden" role="menu" aria-label="更多任务操作"></div>
+  <div id="pending-file-menu" class="task-action-menu hidden" role="menu" aria-label="待处理文件操作">
+    <button id="remove-pending-menu-item" class="danger-menu" type="button" role="menuitem">从待处理清单移除</button>
+  </div>
+  <div id="tag-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tag-dialog-title">
+    <section class="tag-dialog">
+      <div class="panel-head">
+        <div><h2 id="tag-dialog-title">我的标签</h2><p id="tag-dialog-description">创建便于自己查找任务的标签。</p></div>
+        <button id="close-tag-dialog" type="button">关闭</button>
+      </div>
+      <div id="tag-assignment" class="tag-assignment hidden">
+        <p id="tag-assignment-context"></p>
+        <div id="tag-assignment-options" class="tag-assignment-options"></div>
+        <button id="save-job-tags" class="primary" type="button">保存到选中的任务</button>
+      </div>
+      <form id="create-tag-form" class="create-tag-form">
+        <label>标签名称<input id="new-tag-name" maxlength="24" required placeholder="例如：客户已确认"></label>
+        <label>颜色<input id="new-tag-color" type="color" value="#5965e8"></label>
+        <button type="submit">新建标签</button>
+      </form>
+      <div id="user-tag-list" class="user-tag-list"></div>
+    </section>
+  </div>
+  <div id="review-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="review-dialog-title">
+    <section class="review-dialog">
+      <div class="panel-head review-head">
+        <div><p class="eyebrow">人工复核</p><h2 id="review-dialog-title">查看处理后的文件</h2><p id="review-dialog-description">自动检查只提供风险依据，最终决定由你作出。</p></div>
+        <button id="close-review-dialog" type="button">关闭</button>
+      </div>
+      <div id="review-state" class="review-state"></div>
+      <div id="review-summary" class="review-summary"></div>
+      <section class="review-section">
+        <div class="review-section-head"><div><h3>画面对比</h3><p>新任务会保留 Photoshop 生成的前后预览；旧任务没有预览时，请打开两个文件人工比较。</p></div></div>
+        <div id="review-preview" class="review-preview hidden">
+          <div class="review-compare-modes" role="group" aria-label="画面对比方式">
+            <button class="active" type="button" data-review-compare-mode="split" aria-pressed="true">拖动分割</button>
+            <button type="button" data-review-compare-mode="overlay" aria-pressed="false">透明叠加</button>
+            <button type="button" data-review-compare-mode="difference" aria-pressed="false">视觉差值</button>
+          </div>
+          <p id="review-compare-help" class="review-compare-help">拖动分隔线快速检查构图和大面积变化。</p>
+          <div id="review-preview-stage" class="review-preview-stage">
+            <img id="review-before-image" alt="处理前预览">
+            <img id="review-after-image" class="review-after-image" alt="处理后预览">
+            <i id="review-preview-divider"></i>
+          </div>
+          <label class="review-slider"><span id="review-slider-label">拖动查看处理前后</span><input id="review-compare-range" type="range" min="0" max="100" value="50"><output id="review-slider-output">50%</output></label>
+        </div>
+        <div id="review-preview-fallback" class="review-preview-fallback"></div>
+      </section>
+      <section class="review-section">
+        <h3>打开文件人工查看</h3>
+        <p class="review-help">建议先打开原件，再打开处理结果，重点检查整体画面、图层、文字、蒙版和智能对象。打开文件本身不会执行清理。</p>
+        <div class="review-open-actions">
+          <button type="button" data-open-review-target="source">打开原件</button>
+          <button class="primary" type="button" data-open-review-target="result">打开处理结果</button>
+          <button type="button" data-open-review-target="result_folder">在文件夹中显示结果</button>
+          <button type="button" data-open-review-target="report">打开完整报告</button>
+        </div>
+        <dl id="review-paths" class="review-paths"></dl>
+      </section>
+      <section class="review-section review-decision">
+        <h3>记录你的决定</h3>
+        <label>复核备注（建议写明看过哪些内容）<textarea id="review-note" rows="3" maxlength="2000" placeholder="例如：已检查主画面、文字、蒙版和关键智能对象，肉眼未见异常。"></textarea></label>
+        <label class="check"><input id="review-confirm-risk" type="checkbox">我已经实际查看处理结果，并理解自动检查仍有未通过项。</label>
+        <div class="review-decision-actions">
+          <button id="review-discard" class="danger-quiet" type="button">放弃并清理结果…</button>
+          <button id="review-keep" type="button">已查看，继续隔离</button>
+          <button id="review-accept" class="warning-action" type="button">接受为成品（有风险）</button>
+        </div>
+        <p id="review-decision-help" class="field-help"></p>
+      </section>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

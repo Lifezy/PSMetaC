@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">PSMetaC</title>
+  <desc id="desc">分层 Photoshop 文件与净化闪光组成的 PaceSpace Metadata Cleaner 标志</desc>
+  <defs>
+    <linearGradient id="tile" x1="116" y1="94" x2="890" y2="914" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7475F3"/>
+      <stop offset=".52" stop-color="#5256D8"/>
+      <stop offset="1" stop-color="#34388F"/>
+    </linearGradient>
+    <linearGradient id="clean" x1="554" y1="118" x2="858" y2="455" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8CF2DD"/>
+      <stop offset="1" stop-color="#20B9A2"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="30" stdDeviation="32" flood-color="#1E255F" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect x="54" y="54" width="916" height="916" rx="226" fill="url(#tile)"/>
+  <path d="M594 149h134c78 0 142 64 142 142v338c0 78-64 142-142 142H594c-78 0-142-64-142-142V291c0-78 64-142 142-142Z" fill="url(#clean)" opacity=".9"/>
+  <path d="M382 196h290c94 0 170 76 170 170v338c0 94-76 170-170 170H382c-94 0-170-76-170-170V366c0-94 76-170 170-170Z" fill="#AEB1FF" opacity=".72"/>
+  <rect x="164" y="247" width="582" height="582" rx="142" fill="#FFF" filter="url(#shadow)"/>
+  <path d="M278 684V390h76c82 0 124 39 124 100 0 65-46 100-128 100" fill="none" stroke="#3F43AA" stroke-width="66" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M650 424c-25-26-59-39-96-39-55 0-94 27-94 66 0 37 31 55 94 69 67 15 98 38 98 79 0 50-45 82-108 82-45 0-85-16-112-46" fill="none" stroke="#3F43AA" stroke-width="55" stroke-linecap="round"/>
+  <path d="m785 170 24 62 62 24-62 24-24 62-24-62-62-24 62-24Z" fill="#FFF"/>
+  <path d="m856 329 10 27 27 10-27 10-10 27-10-27-27-10 27-10Z" fill="#B8FFF0"/>
+  <circle cx="790" cy="762" r="18" fill="#38CBB4"/>
+  <circle cx="840" cy="719" r="12" fill="#72E2CF"/>
+  <circle cx="872" cy="670" r="7" fill="#B8FFF0"/>
+</svg>

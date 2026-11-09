@@ -1,0 +1,24 @@
+{
+  "fixture": "V-L59",
+  "recordedAt": "2026-07-23T10:07:17.101Z",
+  "sourceBytes": 4581125587,
+  "preflightXmpBytes": 1635926837,
+  "outputBytes": 2946144754,
+  "xmpReductionBytes": 1634507966,
+  "xmpReductionPercent": 99.913268,
+  "openedSmartObjects": 40,
+  "failedSmartObjects": 0,
+  "documentAncestorsAfter": 0,
+  "sourceUnchanged": true,
+  "pixel": {
+    "comparable": true,
+    "exact": false,
+    "changedPixels": 175206,
+    "maxChannelDiff": 17,
+    "alphaChangedPixels": 0,
+    "mse": 0.436674839302,
+    "psnrDb": 51.729222
+  },
+  "expectedStrictV1Disposition": "quarantined",
+  "source": "small_cancelable_test/test_manifest.txt"
+}

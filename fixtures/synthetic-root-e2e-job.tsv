@@ -1,0 +1,4 @@
+#PSB_SYNTHETIC_FIXTURE_V1
+MODE	ROOT_ONLY
+OUTPUT_PATH	D%3A%5CPSMetaC-Sandbox%5Csynthetic-documentancestors-root-v1.psb
+LOG_PATH	D%3A%5CPSMetaC-Sandbox%5Ccreate-root.log

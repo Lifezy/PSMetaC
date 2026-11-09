@@ -1,0 +1,44 @@
+node_modules/
+dist/
+release/
+.runtime-app/
+.cache/
+*.log
+*.tmp
+*.pid
+
+# Local runtime data belongs outside the source tree.
+app_data/
+desktop_smoke/
+
+# Local evidence, user profiles, caches and old build backups.
+.test-artifacts/
+.ui-test*/
+.local/
+dist-*/
+build/electron-*/
+build/builder-*.yaml
+playwright-report/
+test-results/
+
+# User documents and local credentials must never be committed.
+*.psd
+*.psb
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.report.html
+*.report.json
+*.events.jsonl
+*.zip
+*.exe
+*.blockmap
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.p12
+.DS_Store
+Thumbs.db
