@@ -25,6 +25,39 @@ test("a user-configured excluded root is denied", () => {
   );
 });
 
+test("directory aliases share allow and deny boundaries, including future outputs", async (context) => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "psmetac-alias-"));
+  context.after(() => fs.rm(root, { recursive: true, force: true }));
+  const realDirectory = path.join(root, "real-directory");
+  const aliasDirectory = path.join(root, "alias-directory");
+  await fs.mkdir(realDirectory);
+  await fs.symlink(
+    realDirectory,
+    aliasDirectory,
+    process.platform === "win32" ? "junction" : "dir",
+  );
+  const file = path.join(realDirectory, "source.psb");
+  await fs.writeFile(file, "synthetic");
+  const canonicalFile = await fs.realpath(file);
+  assert.equal(isPathInside(canonicalFile, aliasDirectory), true);
+  assert.equal(
+    isPathInside(path.join(aliasDirectory, "future", "output.psb"), realDirectory),
+    true,
+  );
+  assert.equal(
+    isPathInside(path.join(root, "real-directory-sibling", "other.psb"), aliasDirectory),
+    false,
+  );
+  assert.throws(
+    () => assertNotDenied(canonicalFile, [aliasDirectory]),
+    (error: unknown) => error instanceof PathPolicyError && error.code === "DENIED_PATH",
+  );
+  const config = createDefaultConfig(path.join(root, "data"), {
+    allowedInputRoots: [aliasDirectory],
+  });
+  assert.equal((await validateSourcePath(file, config)).sourcePath, canonicalFile);
+});
+
 test("default configuration has no mandatory excluded root", () => {
   const config = createDefaultConfig("C:\\PSBCleanerData");
   assert.deepEqual(config.deniedRoots, []);

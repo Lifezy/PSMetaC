@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { realpathSync } from "node:fs";
 import path from "node:path";
 import type { AppConfig, OutputMode } from "./types.ts";
 
@@ -13,7 +14,27 @@ export class PathPolicyError extends Error {
 }
 
 function comparisonValue(value: string): string {
-  const resolved = path.resolve(value).replace(/[\\/]+$/, "");
+  const absolute = path.resolve(value);
+  let existing = absolute;
+  for (;;) {
+    try {
+      existing = path.resolve(
+        realpathSync.native(existing),
+        path.relative(existing, absolute),
+      );
+      break;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code !== "ENOENT" && code !== "ENOTDIR") throw error;
+      const parent = path.dirname(existing);
+      if (parent === existing) {
+        existing = absolute;
+        break;
+      }
+      existing = parent;
+    }
+  }
+  const resolved = existing.replace(/[\\/]+$/, "");
   return process.platform === "win32" ? resolved.toLowerCase() : resolved;
 }
 
